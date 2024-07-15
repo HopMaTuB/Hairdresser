@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "hairdresser"
+version = "0.0.1"
+description = "web app for private hairdresser"
+authors = ["HopMaTuB"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
