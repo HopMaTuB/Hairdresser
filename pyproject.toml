@@ -1,15 +1,18 @@
 [tool.poetry]
-name = "hairdresser"
-version = "0.0.1"
-description = "web app for private hairdresser"
-authors = ["HopMaTuB"]
+name = "y"
+version = "0.1.0"
+description = ""
+authors = ["HopMaTuB <sunkiper@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-django = "^5.0.7"
-sqlalchemy = "^2.0.31"
-pillow = "^10.4.0"
+sqlalchemy = "^2.0.32"
+pydantic = "^2.8.2"
+fastapi = "^0.112.2"
+uvicorn = "^0.30.6"
+fastapi-mail = "^1.4.1"
+slowapi = "^0.1.9"
 
 
 [build-system]
