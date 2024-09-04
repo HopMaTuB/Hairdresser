@@ -1,29 +1,40 @@
-import os
-from fastapi_mail import ConnectionConfig
-from pathlib import Path
-from dotenv import load_dotenv
-from fastapi.security import OAuth2PasswordBearer
-from slowapi.util import get_remote_address
-from slowapi import Limiter
+from pydantic import ConfigDict
+from pydantic_settings import BaseSettings
 
-load_dotenv()
 
-SQLALCHEMY_DATABASE_URL = os.getenv('SQLALCHEMY_DATABASE_URL')
-SECRET_KEY = os.getenv('SECRET_KEY')
-ALGORITHM = os.getenv('ALGORITHM')
+class Settigns(BaseSettings):
+    POSTGRES_USER: str = "your_db_user"
+    POSTGRES_PASSWORD: str = "your_db_password"
+    POSTGRES_HOST: str = "localhost"
+    POSTGRES_HOST_ASYNC: str = "postgres"
+    POSTGRES_PORT: int = 5432
+    POSTGRES_DB: str = "your_db_name"
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+    PORT: int = 8000
+    HOST: str = "0.0.0.0"
+    RELOAD: bool = True
+    STR_ALLOWED_ORIGINS: str = "*,example.url"
 
-conf = ConnectionConfig(
-    MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
-    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
-    MAIL_FROM=os.getenv("MAIL_FROM"),
-    MAIL_PORT=os.getenv("MAIL_PORT"),
-    MAIL_SERVER=os.getenv("MAIL_SERVER"),
-    MAIL_FROM_NAME=os.getenv("MAIL_FROM_NAME"),
-    MAIL_STARTTLS=False,
-    MAIL_SSL_TLS=True,
-    USE_CREDENTIALS=True,
-    VALIDATE_CERTS=True,
-    TEMPLATE_FOLDER=Path(__file__).parent / 'templates',
-)
+    AUTH_SECRET_KEY: str = "secret key"
+    AUTH_ALGORITHM: str = "algorithm"
+
+    CLOUDINARY_NAME: str = "cloudinary_name"
+    CLOUDINARY_API_KEY: str = "cloudinary_api_key"
+    CLOUDINARY_API_SECRET: str = "cloudinary_api_secret"
+
+    @property
+    def ASYNC_DATABASE_URL(self) -> str:
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST_ASYNC}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+    @property
+    def SYNC_DATABASE_URL(self) -> str:
+        return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
+    @property
+    def ALLOWED_ORIGINS_LIST(self) -> list:
+        return self.STR_ALLOWED_ORIGINS.split(",")
+
+    model_config = ConfigDict(
+        extra="ignore", env_file=".env", env_file_encoding="utf-8"
+    )
+
+config = Settigns()
