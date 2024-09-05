@@ -1,6 +1,6 @@
 import contextlib
 
-from settings import SQLALCHEMY_DATABASE_URL
+from settings import Settigns
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -30,7 +30,7 @@ class DatabaseSessionManager:
             await session.close()
 
 
-sessionmanager = DatabaseSessionManager(SQLALCHEMY_DATABASE_URL)
+sessionmanager = DatabaseSessionManager(Settigns.ASYNC_DATABASE_URL)
 
 
 async def get_db():

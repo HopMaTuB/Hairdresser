@@ -2,7 +2,7 @@ from sqlalchemy import (
     Column,Integer,String,Date,Boolean,DateTime,func
     )
 from sqlalchemy.orm import declarative_base
-from src.configuration.database import engine
+from src.configuration.database import AsyncEngine
 
 Base = declarative_base()
 
@@ -23,4 +23,4 @@ class User(Base):
     update_at = Column('update_at',)
 
 
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=AsyncEngine)
