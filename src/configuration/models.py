@@ -1,26 +1,45 @@
-from sqlalchemy import (
-    Column,Integer,String,Date,Boolean,DateTime,func
-    )
-from sqlalchemy.orm import declarative_base
-from src.configuration.database import AsyncEngine
+import enum
+from datetime import date
+from uuid import UUID, uuid4
 
-Base = declarative_base()
+from sqlalchemy import Integer, String, DateTime, func, Enum, ForeignKey, Column, Table
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+
+
+class Base(DeclarativeBase):
+	pass
+
+
+class Role(enum.Enum):
+	admin: str = "admin"
+	moderator: str = "moderator"
+	user: str = "user"
+
 
 class User(Base):
-    __tablename__ = 'users'
-    
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(25), unique=True, nullable=False)
-    first_name = Column(String(20), unique=False, index=True, nullable=False)
-    last_name = Column(String(30), unique=False, index=True, nullable=True)
-    email = Column(String(250), unique=True, index=True,nullable=False)
-    password = Column(String(250), unique=False, index=False,nullable=False)
-    phone_number = Column(String, unique=False, index=False,nullable=False)
-    date_of_birth = Column(Date, unique=False, index=False, nullable=True)
-    refresh_token = Column(String,nullable=True)
-    confirmed = Column(Boolean,default=False)
-    created_at = Column('created_at',DateTime,default=func.now())
-    update_at = Column('update_at',)
+	__tablename__ = 'users'
+	
+	id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+	username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+	first_name: Mapped[str] = mapped_column(String(50), nullable=True)
+	email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+	password: Mapped[str] = mapped_column(String(255), nullable=False)
+	created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now())
+	updated_at: Mapped[date] = mapped_column("updated_at", DateTime, default=func.now(), onupdate=func.now())
+	role: Mapped[Role] = mapped_column("role", Enum(Role), default=Role.user)
+	
+	@property
+	def is_admin(self):
+		return self.role == Role.admin
 
+	@property
+	def is_moderator(self):
+		return self.role == Role.moderator
 
-Base.metadata.create_all(bind=AsyncEngine)
+class Client(Base):
+	__tablename__ = 'clients'
+	
+	id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+	name: Mapped[str] = mapped_column(String(100), nullable=False,unique=True)
+	phone: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
