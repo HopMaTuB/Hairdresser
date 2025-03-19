@@ -6,12 +6,10 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
 from starlette import status
-from settings import SECRET_KEY,ALGORITHM
+
 
 from src.configuration.database import get_db
 from src.configuration.models import User
-from settings import oauth2_scheme
-
 
 class Hash:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

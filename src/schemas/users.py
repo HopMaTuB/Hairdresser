@@ -3,6 +3,8 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, Field
 from uuid import UUID
 
+from src.configuration.models import Role
+
 
 class UserSchema(BaseModel):
     username: str = Field(min_length=3, max_length=50)
@@ -16,6 +18,7 @@ class UserUpdate(BaseModel):
 
 class UserChangeRole(BaseModel):
     id: UUID
+    role: Role
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -28,6 +31,7 @@ class UserDetail(BaseModel):
     email: EmailStr
     created_at: datetime
     updated_at: Optional[datetime] = None
+    role: Role
 
     class Config:
         from_attributes = True

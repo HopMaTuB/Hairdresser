@@ -5,7 +5,8 @@ from passlib.context import CryptContext
 from typing import Optional
 from jose import JWTError, jwt
 
-from settings import config
+
+from src.configuration.settings import config
 
 
 class Auth:

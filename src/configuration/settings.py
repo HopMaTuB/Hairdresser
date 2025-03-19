@@ -18,10 +18,6 @@ class Settigns(BaseSettings):
     AUTH_SECRET_KEY: str = "secret key"
     AUTH_ALGORITHM: str = "algorithm"
 
-    CLOUDINARY_NAME: str = "cloudinary_name"
-    CLOUDINARY_API_KEY: str = "cloudinary_api_key"
-    CLOUDINARY_API_SECRET: str = "cloudinary_api_secret"
-
     @property
     def ASYNC_DATABASE_URL(self) -> str:
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST_ASYNC}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
