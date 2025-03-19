@@ -22,7 +22,7 @@ class User(Base):
 	
 	id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
 	username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
-	first_name: Mapped[str] = mapped_column(String(50), nullable=True)
+	first_name: Mapped[str] = mapped_column(String(50), nullable=False)
 	email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
 	password: Mapped[str] = mapped_column(String(255), nullable=False)
 	created_at: Mapped[date] = mapped_column("created_at", DateTime, default=func.now())
@@ -42,4 +42,13 @@ class Client(Base):
 	
 	id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
 	name: Mapped[str] = mapped_column(String(100), nullable=False,unique=True)
-	phone: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
+	phone: Mapped[str] = mapped_column(String(20), nullable=False)
+
+class Record(Base):
+	__tablename__ = 'records'
+
+	id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, default=uuid4)
+	client_id: Mapped[UUID] = mapped_column(UUID, relationship(Client.id),nullable=False)
+	user_id: Mapped[UUID] = mapped_column(UUID,relationship(User.id),nullable=False)
+	record_date: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
+	cost: Mapped[float] = mapped_column(float, nullable=False)
